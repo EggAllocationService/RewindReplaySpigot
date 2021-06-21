@@ -1,0 +1,7 @@
+name: RewindRepeat
+version: 1.0.0
+main: io.github.eggallocationservice.rewindrepeat.RewindRepeat
+api-version: 1.16
+depend: [ ProtocolLib, CommandAPI ]
+authors: [ EggAllocationService ]
+description: DVR but its minecraft and it's server-side
