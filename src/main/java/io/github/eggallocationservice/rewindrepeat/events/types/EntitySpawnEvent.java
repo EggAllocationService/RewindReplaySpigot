@@ -26,6 +26,9 @@ public class EntitySpawnEvent implements ReplayEvent<EntitySpawnEvent> {
         bb.writeDouble(z);
         bb.writeDouble(pitch);
         bb.writeDouble(yaw);
+        bb.writeDouble(sx);
+        bb.writeDouble(sy);
+        bb.writeDouble(sz);
         return bb.toByteArray();
     }
 
