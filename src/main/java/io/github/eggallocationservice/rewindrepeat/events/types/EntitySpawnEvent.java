@@ -13,6 +13,9 @@ public class EntitySpawnEvent implements ReplayEvent<EntitySpawnEvent> {
     public double pitch;
     public double yaw;
     public String type;
+    public double sx;
+    public double sy;
+    public double sz;
     @Override
     public byte[] serialize() {
         ByteArrayDataOutput bb = ByteStreams.newDataOutput();

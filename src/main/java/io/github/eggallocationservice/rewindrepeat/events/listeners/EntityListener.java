@@ -89,6 +89,9 @@ public class EntityListener implements Listener {
         b.pitch = e.getLocation().getPitch();
         b.yaw = e.getLocation().getPitch();
         b.type = e.getEntity().getType().toString();
+        b.sx = e.getEntity().getVelocity().getX();
+        b.sy = e.getEntity().getVelocity().getY();
+        b.sz = e.getEntity().getVelocity().getZ();
         ReelManager.get(e.getEntity().getWorld()).add(b);
 
     }
