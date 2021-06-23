@@ -1,17 +1,21 @@
 package io.github.eggallocationservice.rewindrepeat.events.listeners;
 
 import io.github.eggallocationservice.rewindrepeat.events.ReelManager;
-import io.github.eggallocationservice.rewindrepeat.events.types.EntityMovementEvent;
-import io.github.eggallocationservice.rewindrepeat.events.types.PlayerBreakBlockEvent;
-import io.github.eggallocationservice.rewindrepeat.events.types.PlayerPlaceBlockEvent;
+import io.github.eggallocationservice.rewindrepeat.events.types.*;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class EntityListener implements Listener {
     @EventHandler
@@ -84,6 +88,53 @@ public class EntityListener implements Listener {
         b.z = e.getLocation().getZ();
         b.pitch = e.getLocation().getPitch();
         b.yaw = e.getLocation().getPitch();
+        b.type = e.getEntity().getType().toString();
+        ReelManager.get(e.getEntity().getWorld()).add(b);
+
+    }
+    @EventHandler
+    public void heldItem(PlayerItemHeldEvent e) {
+        if (ReelManager.get(e.getPlayer().getWorld()) == null) {
+            return;
+        }
+        PlayerSwitchHeldItemEvent b = new PlayerSwitchHeldItemEvent();
+        b.entityId = e.getPlayer().getEntityId();
+        ItemStack inHand =  e.getPlayer().getInventory().getItem(e.getNewSlot());
+        if (inHand == null) {
+            b.material = "AIR";
+        } else {
+            b.material = inHand.getType().toString();
+        }
+        ItemStack oldHand =  e.getPlayer().getInventory().getItem(e.getPreviousSlot());
+        if (oldHand == null) {
+            b.oldMaterial = "AIR";
+        } else {
+            b.oldMaterial = oldHand.getType().toString();
+        }
+        ReelManager.get(e.getPlayer().getWorld()).add(b);
+    }
+    @EventHandler
+    public void swing(PlayerAnimationEvent e) {
+        if (ReelManager.get(e.getPlayer().getWorld()) == null) {
+            return;
+        }
+        PlayerSwingArmEvent b = new PlayerSwingArmEvent();
+        b.entityId = e.getPlayer().getEntityId();
+        ReelManager.get(e.getPlayer().getWorld()).add(b);
+    }
+    @EventHandler
+    public void death(EntityDeathEvent e) {
+        if (e.getEntity().getType() == EntityType.PLAYER) return;
+        if (ReelManager.get(e.getEntity().getWorld()) == null) {
+            return;
+        }
+        EntityDiesEvent b = new EntityDiesEvent();
+        b.entityId = e.getEntity().getEntityId();
+        b.x = e.getEntity().getLocation().getX();
+        b.y = e.getEntity().getLocation().getY();
+        b.z = e.getEntity().getLocation().getZ();
+        b.pitch = e.getEntity().getLocation().getPitch();
+        b.yaw = e.getEntity().getLocation().getPitch();
         b.type = e.getEntity().getType().toString();
         ReelManager.get(e.getEntity().getWorld()).add(b);
     }

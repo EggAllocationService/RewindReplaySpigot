@@ -2,6 +2,7 @@ package io.github.eggallocationservice.rewindrepeat;
 
 
 import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
 import dev.jorel.commandapi.executors.CommandExecutor;
@@ -24,11 +25,11 @@ public class SnapshotCommand implements CommandExecutor {
         Player p = (Player) sender;
         long start = System.currentTimeMillis();
         int duration = (int) args[0];
-        if (duration > 30) {
+        if (duration > Config.BUFFER_SIZE_SECONDS) {
             sender.sendMessage("Cannot clip more than 30 seconds");
             return;
         }
-        byte[] data = ReplayAPI.captureReplay(p.getWorld(), 15);
+        byte[] data = ReplayAPI.captureReplay(p.getWorld(), duration);
         sender.sendMessage("Created " + data.length / 1000 + "KB replay in " + (System.currentTimeMillis() - start) + "ms");
         try {
             Files.write(Path.of("test.replay"), data);
@@ -41,6 +42,7 @@ public class SnapshotCommand implements CommandExecutor {
         new CommandAPICommand("clip")
                 .executes(this)
                 .withArguments(new IntegerArgument("duration"))
+                .withPermission(CommandPermission.OP)
                 .register();
 
     }
