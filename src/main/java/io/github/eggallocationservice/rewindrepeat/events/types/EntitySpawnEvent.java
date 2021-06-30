@@ -16,6 +16,8 @@ public class EntitySpawnEvent implements ReplayEvent<EntitySpawnEvent> {
     public double sx;
     public double sy;
     public double sz;
+    public boolean hasName = false;
+    public String name;
     @Override
     public byte[] serialize() {
         ByteArrayDataOutput bb = ByteStreams.newDataOutput();
@@ -29,6 +31,10 @@ public class EntitySpawnEvent implements ReplayEvent<EntitySpawnEvent> {
         bb.writeDouble(sx);
         bb.writeDouble(sy);
         bb.writeDouble(sz);
+        bb.writeBoolean(hasName);
+        if (hasName) {
+            bb.writeUTF(name);
+        }
         return bb.toByteArray();
     }
 

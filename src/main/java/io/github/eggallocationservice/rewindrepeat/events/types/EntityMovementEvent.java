@@ -11,6 +11,12 @@ public class EntityMovementEvent implements ReplayEvent<EntityMovementEvent> {
     public double z;
     public double pitch;
     public double yaw;
+    public boolean hasFrom;
+    public double fx;
+    public double fy;
+    public double fz;
+    public double fpitch;
+    public double fyaw;
     @Override
     public byte[] serialize() {
         ByteArrayDataOutput bb = ByteStreams.newDataOutput();
@@ -20,6 +26,14 @@ public class EntityMovementEvent implements ReplayEvent<EntityMovementEvent> {
         bb.writeDouble(z);
         bb.writeDouble(pitch);
         bb.writeDouble(yaw);
+        bb.writeBoolean(hasFrom);
+        if (hasFrom) {
+            bb.writeDouble(fx);
+            bb.writeDouble(fy);
+            bb.writeDouble(fz);
+            bb.writeDouble(fpitch);
+            bb.writeDouble(fyaw);
+        }
         return bb.toByteArray();
     }
 
